@@ -16,6 +16,12 @@ jobs:
       - name: List files
         run: ls -la  # Verifica que deploy.sh esté presente
 
+      - name: Debug Secrets
+        run: |
+          echo "Username: ${{ secrets.SERVER_USERNAME }}"
+          echo "Host: ${{ secrets.SERVER_HOST }}"
+          echo "Key: ${{ secrets.SERVER_SSH_KEY }}"
+
       - name: Verify SSH connection and check deploy.sh
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 'if [ -f /home/viko/deploy.sh ]; then echo "deploy.sh found"; else echo "deploy.sh not found"; exit 1; fi'
@@ -43,4 +49,4 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}  # Usuario SSH
           key: ${{ secrets.SERVER_SSH_KEY }}  # Clave privada SSH
           source: "deploy.sh"  # Asegúrate de que esta ruta sea correcta
-          target: "/home/viko/deploy.sh"  # Ruta en el servidor
+          target: ".github\workflows\deploy.sh"  # Ruta en el servidor
