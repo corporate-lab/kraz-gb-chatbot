@@ -35,8 +35,8 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}  # IP del servidor
           username: ${{ secrets.SERVER_USERNAME }}  # Usuario SSH
           key: ${{ secrets.SERVER_SSH_KEY }}  # Clave privada SSH
-          source: "deploy.sh"
-          target: "/path/to/deploy.sh"  # Ruta en el servidor
+          source: "deploy.sh"  # Asegúrate de que esta ruta sea correcta
+          target: "/home/viko/deploy.sh"  # Ruta en el servidor
 
       - name: Execute Deployment Script
-        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 'bash /path/to/deploy.sh'
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 'bash /home/viko/deploy.sh'
