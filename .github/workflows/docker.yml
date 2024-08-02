@@ -49,4 +49,4 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}  # Usuario SSH
           key: ${{ secrets.SERVER_SSH_KEY }}  # Clave privada SSH
           source: "deploy.sh"  # Asegúrate de que esta ruta sea correcta
-          target: ".github\workflows\deploy.sh"  # Ruta en el servidor
+          target: ".github/workflows/deploy.sh"  # Ruta en el servidor
