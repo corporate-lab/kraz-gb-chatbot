@@ -13,6 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: List files
+        run: ls -la  # Verifica que deploy.sh esté presente
+
+      - name: Verify SSH connection and check deploy.sh
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 'if [ -f /home/viko/deploy.sh ]; then echo "deploy.sh found"; else echo "deploy.sh not found"; exit 1; fi'
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
@@ -37,6 +44,3 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}  # Clave privada SSH
           source: "deploy.sh"  # Asegúrate de que esta ruta sea correcta
           target: "/home/viko/deploy.sh"  # Ruta en el servidor
-
-      - name: Execute Deployment Script
-        run: ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 'bash /home/viko/deploy.sh'
