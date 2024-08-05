@@ -16,16 +16,6 @@ jobs:
       - name: List files
         run: ls -la  # Verifica que deploy.sh esté presente
 
-      - name: Debug Secrets
-        run: |
-          echo "Username: ${{ secrets.SERVER_USERNAME }}"
-          echo "Host: ${{ secrets.SERVER_HOST }}"
-          echo "Key: ${{ secrets.SERVER_SSH_KEY }}"
-
-      - name: Verify SSH connection and check deploy.sh
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} 'if [ -f /home/viko/deploy.sh ]; then echo "deploy.sh found"; else echo "deploy.sh not found"; exit 1; fi'
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
@@ -41,12 +31,3 @@ jobs:
           context: .
           push: true
           tags: vikolab/kraz-difyai-gb:latest
-
-      - name: Deploy to Server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SERVER_HOST }}  # IP del servidor
-          username: ${{ secrets.SERVER_USERNAME }}  # Usuario SSH
-          key: ${{ secrets.SERVER_SSH_KEY }}  # Clave privada SSH
-          source: "deploy.sh"  # Asegúrate de que esta ruta sea correcta
-          target: ".github/workflows/deploy.sh"  # Ruta en el servidor
