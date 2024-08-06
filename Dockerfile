@@ -1,19 +1,21 @@
+# Start of Selection
 FROM --platform=linux/amd64 node:19-bullseye-slim
 
 WORKDIR /app
 
-# Copia package.json y yarn.lock
-COPY package.json yarn.lock ./
+# Copy package.json
+COPY package.json ./
 
 # Instala las dependencias
 RUN yarn install
 
-# Copia el resto de la aplicación
+# Copy the rest of the application
 COPY . .
 
-# Construye la aplicación
+# Build the application
 RUN yarn build
 
 EXPOSE 3000
 
 CMD ["yarn", "start"]
+# End of Selection
