@@ -32,3 +32,4 @@ jobs:
             vikolab/kraz-difyai-gb:${{ github.sha }}
           cache-from: type=registry,ref=vikolab/kraz-difyai-gb:latest
           cache-to: type=inline
+          file: Dockerfile
