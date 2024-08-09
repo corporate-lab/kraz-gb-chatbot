@@ -58,6 +58,76 @@ const Main: FC = () => {
     }
   }, [status, router]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!hasSetAppConfig) {
+          setAppUnavailable(true);
+          return;
+        }
+        console.log("Fetching app data...");
+        const [conversationData, appParams] = await Promise.all([
+          fetchConversations(),
+          fetchAppParams(),
+        ]);
+
+        console.log("Conversation data:", conversationData);
+        console.log("App params:", appParams);
+
+        // handle current conversation id
+        const { data: conversations } = conversationData as {
+          data: ConversationItem[];
+        };
+        const _conversationId = getConversationIdFromStorage(APP_ID);
+        const isNotNewConversation =
+          conversations &&
+          conversations.length > 0 &&
+          conversations.some((item) => item.id === _conversationId);
+
+        // fetch new conversation info
+        const {
+          user_input_form,
+          opening_statement: introduction,
+          file_upload,
+          system_parameters,
+        }: any = appParams;
+        setLocaleOnClient(APP_INFO.default_language, true);
+        setNewConversationInfo({
+          name: t("app.chat.newChatDefaultName"),
+          introduction,
+        });
+        const prompt_variables =
+          userInputsFormToPromptVariables(user_input_form);
+        setPromptConfig({
+          prompt_template: promptTemplate,
+          prompt_variables,
+        } as PromptConfig);
+        setVisionConfig({
+          ...file_upload?.image,
+          image_file_size_limit: system_parameters?.system_parameters || 0,
+        });
+        setConversationList(conversations || []);
+
+        if (isNotNewConversation)
+          setCurrConversationId(_conversationId, APP_ID, false);
+
+        setInited(true);
+      } catch (e: any) {
+        console.error("Error initializing app:", e);
+        if (e.status === 404) {
+          setAppUnavailable(true);
+        } else {
+          setIsUnknwonReason(true);
+          setAppUnavailable(true);
+        }
+      }
+    };
+
+    if (status === "authenticated") {
+      fetchData();
+    }
+  }, [status]);
+
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -129,6 +199,7 @@ const Main: FC = () => {
     isChatStarted,
     { setTrue: setChatStarted, setFalse: setChatNotStarted },
   ] = useBoolean(false);
+
   const handleStartChat = (inputs: Record<string, any>) => {
     createNewChat();
     setConversationIdChangeBecauseOfNew(true);
@@ -284,67 +355,6 @@ const Main: FC = () => {
 
     return [];
   };
-
-  // init
-  useEffect(() => {
-    if (!hasSetAppConfig) {
-      setAppUnavailable(true);
-      return;
-    }
-    (async () => {
-      try {
-        const [conversationData, appParams] = await Promise.all([
-          fetchConversations(),
-          fetchAppParams(),
-        ]);
-
-        // handle current conversation id
-        const { data: conversations } = conversationData as {
-          data: ConversationItem[];
-        };
-        const _conversationId = getConversationIdFromStorage(APP_ID);
-        const isNotNewConversation = conversations.some(
-          (item) => item.id === _conversationId
-        );
-
-        // fetch new conversation info
-        const {
-          user_input_form,
-          opening_statement: introduction,
-          file_upload,
-          system_parameters,
-        }: any = appParams;
-        setLocaleOnClient(APP_INFO.default_language, true);
-        setNewConversationInfo({
-          name: t("app.chat.newChatDefaultName"),
-          introduction,
-        });
-        const prompt_variables =
-          userInputsFormToPromptVariables(user_input_form);
-        setPromptConfig({
-          prompt_template: promptTemplate,
-          prompt_variables,
-        } as PromptConfig);
-        setVisionConfig({
-          ...file_upload?.image,
-          image_file_size_limit: system_parameters?.system_parameters || 0,
-        });
-        setConversationList(conversations as ConversationItem[]);
-
-        if (isNotNewConversation)
-          setCurrConversationId(_conversationId, APP_ID, false);
-
-        setInited(true);
-      } catch (e: any) {
-        if (e.status === 404) {
-          setAppUnavailable(true);
-        } else {
-          setIsUnknwonReason(true);
-          setAppUnavailable(true);
-        }
-      }
-    })();
-  }, []);
 
   const [
     isResponsing,
@@ -513,27 +523,46 @@ const Main: FC = () => {
         });
       },
       async onCompleted(hasError?: boolean) {
-        if (hasError) return;
-
-        if (getConversationIdChangeBecauseOfNew()) {
-          const { data: allConversations }: any = await fetchConversations();
-          const newItem: any = await generationConversationName(
-            allConversations[0].id
-          );
-
-          const newAllConversations = produce(
-            allConversations,
-            (draft: any) => {
-              draft[0].name = newItem.name;
-            }
-          );
-          setConversationList(newAllConversations as any);
+        if (hasError) {
+          notify({
+            type: "error",
+            message: "An error occurred while processing your request.",
+          });
+          return;
         }
-        setConversationIdChangeBecauseOfNew(false);
-        resetNewConversationInputs();
-        setChatNotStarted();
-        setCurrConversationId(tempNewConversationId, APP_ID, true);
-        setResponsingFalse();
+
+        try {
+          if (getConversationIdChangeBecauseOfNew()) {
+            const { data: allConversations }: any = await fetchConversations();
+            if (allConversations && allConversations.length > 0) {
+              try {
+                const newItem: any = await generationConversationName(
+                  allConversations[0].id
+                );
+                const newAllConversations = produce(
+                  allConversations,
+                  (draft: any) => {
+                    draft[0].name = newItem.name;
+                  }
+                );
+                setConversationList(newAllConversations as any);
+              } catch (nameError) {
+                console.error("Error generating conversation name:", nameError);
+              }
+            }
+          }
+          setConversationIdChangeBecauseOfNew(false);
+          resetNewConversationInputs();
+          setChatNotStarted();
+          setCurrConversationId(tempNewConversationId, APP_ID, true);
+          setResponsingFalse();
+        } catch (error) {
+          console.error("Error in onCompleted:", error);
+          notify({
+            type: "error",
+            message: "An error occurred while updating the conversation.",
+          });
+        }
       },
       onFile(file) {
         const lastThought =

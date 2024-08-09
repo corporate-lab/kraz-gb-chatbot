@@ -1,19 +1,29 @@
-import { type NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
-import { client, getInfo } from '@/app/api/utils/common'
+import { type NextRequest } from "next/server";
+import { getInfo } from "@/app/api/utils/common";
+import { generationConversationName } from "@/service/index";
 
-export async function POST(request: NextRequest, { params }: {
-  params: { conversationId: string }
-}) {
-  const body = await request.json()
-  const {
-    auto_generate,
-    name,
-  } = body
-  const { conversationId } = params
-  const { user } = getInfo(request)
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { conversationId: string } }
+) {
+  try {
+    await getInfo(request); // We still call this to ensure user authentication
+    const data = await generationConversationName(params.conversationId);
 
-  // auto generate name
-  const { data } = await client.renameConversation(conversationId, name, user, auto_generate)
-  return NextResponse.json(data)
+    return new Response(JSON.stringify(data), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Error generating conversation name:", error);
+    return new Response(
+      JSON.stringify({
+        error: "Internal Server Error",
+        details: error instanceof Error ? error.message : String(error),
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
 }

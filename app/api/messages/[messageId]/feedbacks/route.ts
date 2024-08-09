@@ -1,16 +1,20 @@
-import { type NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
-import { client, getInfo } from '@/app/api/utils/common'
+import { type NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { client, getInfo } from "@/app/api/utils/common";
 
-export async function POST(request: NextRequest, { params }: {
-  params: { messageId: string }
-}) {
-  const body = await request.json()
-  const {
-    rating,
-  } = body
-  const { messageId } = params
-  const { user } = getInfo(request)
-  const { data } = await client.messageFeedback(messageId, rating, user)
-  return NextResponse.json(data)
+export async function POST(
+  request: NextRequest,
+  {
+    params,
+  }: {
+    params: { messageId: string };
+  }
+) {
+  const body = await request.json();
+  const { rating } = body;
+  const { messageId } = params;
+  const { user, userId } = await getInfo(request);
+  client.setUserId(userId);
+  const { data } = await client.messageFeedback(messageId, rating, user);
+  return NextResponse.json(data);
 }
