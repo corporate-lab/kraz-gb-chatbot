@@ -29,7 +29,7 @@ jobs:
           push: true
           tags: |
             vikolab/kraz-difyai-gb:latest
-            vikolab/kraz-difyai-gb:${{ github.event.head_commit.timestamp }}
+            vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }}
           cache-from: type=registry,ref=vikolab/kraz-difyai-gb:latest
           cache-to: type=inline
           file: Dockerfile
@@ -50,7 +50,7 @@ jobs:
             docker rm kraz_difyai_gb_test || true
 
             # Descargar la última imagen
-            docker pull vikolab/kraz-difyai-gb:${{ github.event.head_commit.timestamp }}
+            docker pull vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }}
 
             # Ejecutar el nuevo contenedor
-            docker run -d --name kraz_difyai_gb_test -p 8503:3000 --env-file /home/viko/kraz-gbfoods/.env vikolab/kraz-difyai-gb:${{ github.event.head_commit.timestamp }}
+            docker run -d --name kraz_difyai_gb_test -p 8503:3000 --env-file /home/viko/kraz-gbfoods/.env vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }}
