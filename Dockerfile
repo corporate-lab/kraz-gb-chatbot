@@ -23,5 +23,5 @@ ENV PORTTEST=${PORTTEST:-3001}
 EXPOSE ${PORT}
 EXPOSE ${PORTTEST}
 
-CMD ["yarn", "start"]
+CMD ["/bin/bash"]
 # End of Selection
