@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p ${PORT:-3000}",
+    "start:test": "next start -p ${PORTTEST:-3001}",
     "lint": "next lint",
     "fix": "next lint --fix",
     "eslint-fix": "eslint . --fix",

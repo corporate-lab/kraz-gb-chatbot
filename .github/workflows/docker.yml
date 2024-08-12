@@ -53,4 +53,8 @@ jobs:
             docker pull vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }}
 
             # Ejecutar el nuevo contenedor
-            docker run -d --name kraz_difyai_gb_test -p 8503:3000 --env-file /home/viko/kraz-gbfoods/.env vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }}
+            docker run -d --name kraz_difyai_gb_test \
+              -p 8503:${PORTTEST:-3001} \
+              --env-file /home/viko/kraz-gbfoods/.env \
+              vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }} \
+              yarn start:test

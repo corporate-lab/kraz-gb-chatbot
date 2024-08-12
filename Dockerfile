@@ -15,7 +15,13 @@ COPY . .
 # Build the application
 RUN yarn build
 
-EXPOSE 3000
+# Usa la variable PORT del entorno, con 3000 como valor por defecto
+ENV PORT=${PORT:-3000}
+ENV PORTTEST=${PORTTEST:-3001}
+
+# Exponer ambos puertos
+EXPOSE ${PORT}
+EXPOSE ${PORTTEST}
 
 CMD ["yarn", "start"]
 # End of Selection
