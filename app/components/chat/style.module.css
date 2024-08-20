@@ -1,6 +1,8 @@
 .answerIcon {
-  position: relative;
-  background: url(./icons/robot.svg);
+  background: url(/atria-chat.png);
+  background-size: contain;
+  border-radius: 50%;
+  /* position: relative; */
 }
 
 .typeingIcon {
@@ -19,7 +21,7 @@
 
 
 .questionIcon {
-  background: url(./icons/default-avatar.jpg);
+  background: url(/GB-Foods.png);
   background-size: contain;
   border-radius: 50%;
 }

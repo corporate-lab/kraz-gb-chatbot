@@ -10,7 +10,7 @@ if (!APP_ID || !API_KEY || !API_URL) {
 
 export const APP_INFO: AppInfo = {
   title: 'GBFoods - Customer Immersion Insights Chatbot',
-  description: 'Welcome! I\'m here to provide insights on consumer behavior and food product preferences in Ghana, focusing on cooking bases, aids, and condiments. My knowledge comes from 22 consumer immersions in Accra and Kumasi, covering both food vendors and household consumers. I can offer summaries, brand comparisons, and market trends across different consumer segments and product categories. Ask me anything, and I\'ll provide accurate, data-driven information based solely on these immersions to support your decision-making.',
+  description: 'Welcome! I\'m here to provide insights on consumer behavior and food product preferences in Ghana, focusing on cooking bases, aids, and condiments. My knowledge comes from 22 consumer immersions in Accra and Kumasi, covering both food vendors and household consumers.',
   copyright: 'Atria',
   privacy_policy: '',
   default_language: 'en',
