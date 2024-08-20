@@ -5,12 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p ${PORT:-3000}",
-    "start:test": "next start -p ${PORTTEST:-3001}",
+    "start": "next start",
+    "start:test": "next start",
     "lint": "next lint",
     "fix": "next lint --fix",
     "eslint-fix": "eslint . --fix",
-    "prepare": "husky install ./.husky"
+    "prepare": "husky install ./.husky",
+    "install-build-deps": "apt-get update && apt-get install -y python3 make g++"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.2",
@@ -27,7 +28,7 @@
     "@types/react-syntax-highlighter": "^15.5.6",
     "ahooks": "^3.7.5",
     "axios": "^1.3.5",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "classnames": "^2.3.2",
     "copy-to-clipboard": "^3.3.3",
     "dify-client": "^2.3.1",
@@ -69,6 +70,7 @@
     "@faker-js/faker": "^7.6.0",
     "@tailwindcss/typography": "^0.5.9",
     "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/js-cookie": "^3.0.3",
     "@types/negotiator": "^0.6.1",
     "@types/react": "^18.3.3",
