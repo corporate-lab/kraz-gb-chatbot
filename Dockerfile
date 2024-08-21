@@ -6,7 +6,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y python3 make g++
 
 # Copiar package.json y yarn.lock
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 # Instalar dependencias
 RUN yarn install

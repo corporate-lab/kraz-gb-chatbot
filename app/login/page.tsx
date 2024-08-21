@@ -49,7 +49,7 @@ export default function Login() {
         <div className={`flex justify-center mb-8`}>
           <img src="/atria-logo.png" alt="Atria Logo" className={`w-12`} />
         </div>
-        <form onSubmit={handleSubmit} className={`bg-white border border-[#D9D9D9] rounded-lg px-8 pt-6 pb-8 mb-4`}>
+        <form onSubmit={handleSubmit} className={`bg-white border border-[#D9D9D9] rounded-lg px-8 pt-6 pb-8`}>
           <div className={`mb-4`}>
             <label className={`block text-gray-700 text-sm font-bold mb-2`} htmlFor="email">
               Email
@@ -86,12 +86,12 @@ export default function Login() {
               Sign In
             </button>
           </div>
+          <p className={`text-center text-sm mt-4`}>
+            <a className={`text-indigo-600 hover:text-indigo-800`} href="mailto:lab@viko.net?subject=Atria%20-%20Reset%20password%20&body=I%20want%20to%20reset%20the%20password%20from%20my%20account.%0AEmail%3A">
+              Forgot password?
+            </a>
+          </p>
         </form>
-        <p className={`text-center text-sm`}>
-          <a className={`text-indigo-600 hover:text-indigo-800`} href="mailto:lab@viko.net?subject=Atria%20-%20Reset%20password%20&body=I%20want%20to%20reset%20the%20password%20from%20my%20account.%0AEmail%3A">
-            Forgot password?
-          </a>
-        </p>
       </div>
     </div>
   );

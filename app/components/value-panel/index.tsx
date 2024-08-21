@@ -23,7 +23,7 @@ const TemplateVarPanel: FC<ITemplateVarPanelProps> = ({
   return (
     <div>
       <img src="/atria-logo-gray.png" alt="Atria Logo" className="h-8 inline-block flex m-auto" />
-      <p className={'px-6 py-4 text-xs'}>{header}</p>
+      <p className={'px-6 py-4 text-xs flex justify-center'}>{header}</p>
       <div className={cn(isFold ? 'border border-indigo-100' : s.boxShodow, className, 'rounded-xl ')}>
         {/* header */}
         <div
