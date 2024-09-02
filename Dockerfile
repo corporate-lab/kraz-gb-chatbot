@@ -1,27 +1,26 @@
-# Start of Selection
 FROM --platform=linux/amd64 node:19-bullseye-slim
 
 WORKDIR /app
 
-# Copy package.json
+# Instalar herramientas de compilación
+RUN apt-get update && apt-get install -y python3 make g++
+
+# Copiar package.json y yarn.lock
 COPY package.json ./
 
-# Instala las dependencias
+# Instalar dependencias
 RUN yarn install
 
-# Copy the rest of the application
+COPY prisma ./prisma
+RUN npx prisma generate
+
+# Copiar el resto de la aplicación
 COPY . .
 
-# Build the application
+# Construir la aplicación
 RUN yarn build
 
-# Usa la variable PORT del entorno, con 3000 como valor por defecto
-ENV PORT=${PORT:-3000}
-ENV PORTTEST=${PORTTEST:-3001}
+# Exponer el puerto
+EXPOSE 3000
 
-# Exponer ambos puertos
-EXPOSE ${PORT}
-EXPOSE ${PORTTEST}
-
-CMD ["/bin/bash"]
-# End of Selection
+CMD ["yarn", "start"]

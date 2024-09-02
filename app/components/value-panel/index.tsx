@@ -21,19 +21,24 @@ const TemplateVarPanel: FC<ITemplateVarPanelProps> = ({
   isFold,
 }) => {
   return (
-    <div className={cn(isFold ? 'border border-indigo-100' : s.boxShodow, className, 'rounded-xl ')}>
-      {/* header */}
-      <div
-        className={cn(isFold && 'rounded-b-xl', 'rounded-t-xl px-6 py-4 bg-indigo-25 text-xs')}
-      >
-        {header}
-      </div>
-      {/* body */}
-      {!isFold && children && (
-        <div className='rounded-b-xl p-6'>
-          {children}
+    <div>
+      <img src="/atria-logo-gray.png" alt="Atria Logo" className="h-8 inline-block flex m-auto" />
+      <p className={'px-6 py-4 text-xs flex justify-center'}>{header}</p>
+      <div className={cn(isFold ? 'border border-indigo-100' : s.boxShodow, className, 'rounded-xl ')}>
+        {/* header */}
+        <div
+          className={cn(isFold && 'rounded-b-xl', 'rounded-t-xl px-6 py-4 bg-indigo-25 text-xs')}
+        >
+          {/* {header} */}
+          <img src="/atria-logo-2.png" alt="Atria Logo" className="h-8 inline-block" />
         </div>
-      )}
+        {/* body */}
+        {!isFold && children && (
+          <div className='rounded-b-xl p-6'>
+            {children}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

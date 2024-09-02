@@ -84,6 +84,10 @@ const Welcome: FC<IWelcomeProps> = ({
     return (
       <div className='absolute top-0 left-0 right-0 flex items-center justify-between border-b border-gray-100 mobile:h-12 tablet:h-16 px-8 bg-white'>
         <div className='text-gray-900'>{conversationName}</div>
+        <div className={'flex items-center'}>
+          <img src="/GB-Foods.png" alt="GB Foods Logo" className="h-8 inline-block" />
+          <p className={'text-gray-900 ml-2'}>Gallina Blanca</p>
+        </div>
       </div>
     )
   }

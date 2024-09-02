@@ -7,7 +7,9 @@ const userPrefix = `user_${APP_ID}:`
 
 export const getInfo = (request: NextRequest) => {
   const sessionId = request.cookies.get('session_id')?.value || v4()
-  const user = userPrefix + sessionId
+  // const user = userPrefix + sessionId
+  const userEmail = request.cookies.get('userEmail')?.value
+  const user = userEmail || userPrefix + sessionId
   return {
     sessionId,
     user,
