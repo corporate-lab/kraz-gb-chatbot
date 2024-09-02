@@ -46,15 +46,15 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             # Detener y eliminar el contenedor existente
-            docker stop kraz_difyai_gb_test || true
-            docker rm kraz_difyai_gb_test || true
+            docker stop kraz_difyai_gb || true
+            docker rm kraz_difyai_gb || true
 
             # Descargar la última imagen
-            docker pull vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }}
+            docker pull vikolab/kraz-difyai-gb:latest
 
             # Ejecutar el nuevo contenedor
-            docker run -d --name kraz_difyai_gb_test \
-              -p 8503:${PORTTEST:-3001} \
+            docker run -d --name kraz_difyai_gb \
+              -p 8503:3000 \
               --env-file /home/viko/kraz-gbfoods/.env \
-              vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }} \
-              yarn start:test
+              vikolab/kraz-difyai-gb:latest \
+              yarn start
