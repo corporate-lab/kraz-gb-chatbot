@@ -23,16 +23,13 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: |
-            vikolab/kraz-difyai-gb:latest
-            vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }}
-          cache-from: type=registry,ref=vikolab/kraz-difyai-gb:latest
-          cache-to: type=inline
-          file: Dockerfile
+        run: |
+          docker build --no-cache -t vikolab/kraz-difyai-gb:latest .
+          docker tag vikolab/kraz-difyai-gb:latest vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }}
+          docker push vikolab/kraz-difyai-gb:latest
+          docker push vikolab/kraz-difyai-gb:latest_commit_${{ github.event.head_commit.id }}
+        env:
+          DOCKER_BUILDKIT: 1
 
   deploy-to-server:
     needs: build
@@ -54,7 +51,7 @@ jobs:
 
             # Ejecutar el nuevo contenedor
             docker run -d --name kraz_difyai_gb \
-              -p 8503:3000 \
+              -p 8502:3000 \
               --env-file /home/viko/kraz-gbfoods/.env \
               vikolab/kraz-difyai-gb:latest \
               yarn start
